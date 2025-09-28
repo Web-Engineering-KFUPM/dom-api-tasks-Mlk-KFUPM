@@ -19,7 +19,7 @@ inside the <p> element with id="t1-msg".
 💡 Hint:
 document.getElementById("t1-msg").innerHTML = "Hello, World!";
 */
- 
+document.getElementById("t1-msg").innerHTML = "Hello, World!";
 
 /*  
 =======================================
@@ -40,8 +40,11 @@ button.addEventListener("click", function () {
     // change text here
 });
 */
- 
-
+const revealNoteBtn = document.getElementById("t2-btn");
+revealNoteBtn.addEventListener("click", function () {
+  const t2StatusP = document.getElementById("t2-status");
+  t2StatusP.textContent = "You clicked the button!";
+});
 /*  
 =======================================
 TODO3: Inspiring Quote Board
@@ -68,8 +71,29 @@ Use:
 data.content   // the quote text
 data.author    // the author
 */
- 
+const inspireMeBtn = document.getElementById("t3-loadQuote");
+inspireMeBtn.addEventListener("click", function () {
+  const quoteP = document.getElementById("t3-quote");
+  const authorP = document.getElementById("t3-author");
 
+  fetch("https://dummyjson.com/quotes/random")
+    .then(function (response) {
+      if (!response.ok) {
+        throw new Error("HTTP " + response.status);
+      }
+      return response.json();
+    })
+    .then(function (data) {
+      quoteP.textContent = data.quote;
+      authorP.textContent = data.author;
+    })
+    .catch(function (err) {
+      console.error(
+        "There is an error happened in fetching or extracting the data:",
+        err
+      );
+    });
+});
 /*  
 =======================================
 TODO4: Dammam Weather Now
@@ -94,3 +118,30 @@ data.main.temp      → temperature (°C)
 data.main.humidity  → humidity (%)
 data.wind.speed     → wind speed (m/s)
 */
+const checkWeatherBtn = document.getElementById("t4-loadWx");
+checkWeatherBtn.addEventListener("click", function () {
+  const temperatureP = document.getElementById("t4-temp");
+  const humidityP = document.getElementById("t4-hum");
+  const windSpeedP = document.getElementById("t4-wind");
+
+  fetch(
+    "https://api.openweathermap.org/data/2.5/weather?q=Dammam&appid=99b388d274e9b6694271e76e48cb62a2&units=metric"
+  )
+    .then(function (response) {
+      if (!response.ok) {
+        throw new Error("HTTP " + response.status);
+      }
+      return response.json();
+    })
+    .then(function (data) {
+      temperatureP.textContent = data.main.temp + " (°C)";
+      humidityP.textContent = data.main.humidity + " (%)";
+      windSpeedP.textContent = data.wind.speed + " (m/s)";
+    })
+    .catch(function (err) {
+      console.error(
+        "There is an error happened in fetching or extracting the data:",
+        err
+      );
+    });
+});
